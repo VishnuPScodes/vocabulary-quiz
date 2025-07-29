@@ -1,20 +1,20 @@
 import { IAuthBody } from "../types/auth.types";
+import { Request, Response } from "express";
 
-export class AuthController {
-  constructor() {
-    // Initialize any dependencies here
+export const loginUser = async (
+  req: Request,
+  res: Response
+): Promise<string | undefined> => {
+  const { username, password } = req.body as IAuthBody;
+  if (!username || !password) {
+    throw new Error("Username and password are required");
   }
 
-  async register(req: Request, res: Response) {
-    const { username, password, email }: IAuthBody = req.body;
-    // Handle user registration
+  const token = await authenticateUser(email, password);
+  if (!token) {
+    res.status(401).send("Invalid credentials");
+    return;
   }
 
-  async login(req: Request, res: Response) {
-    // Handle user login
-  }
-
-  async logout(req: Request, res: Response) {
-    // Handle user logout
-  }
-}
+  return res.status(200).json({ token });
+};
